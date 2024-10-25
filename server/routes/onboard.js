@@ -27,23 +27,12 @@ router.post("/onboard",async (req,res)=>{
             category,
             skills,
             personal_website,
-            jobHistory : [
-                {
-                    job_id:'',
-                    status : '',
-                    payment_status : ''
-                }
-            ],
-            current_projects:[
-                {
-                    job_id:'',
-                    status:''
-                }
-            ]
+            proposals : [],
+            jobs:[]
         };
 
         await sellers.insertOne(seller);
-        res.redirect("login");
+        res.redirect("/login");
     }
     catch(err){
         console.log(err);

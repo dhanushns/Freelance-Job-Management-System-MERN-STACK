@@ -15,11 +15,11 @@ function PostJob(){
         description : '',
         domain : '',
         category : '',
-        pay_per_hr : '',
-        expected_duration : '',
-        deadline : '',
+        budget : '',
+        project_deadline : '',
+        post_deadline : '',
         skills : []
-    })
+    });
 
     const handleChanges = (e)=>{
         const {name,value} = e.target;
@@ -41,28 +41,32 @@ function PostJob(){
         }
     }
 
-    const submitForm = async (e)=>{
+    const submitForm = async (e) => {
         e.preventDefault();
-        const email = sessionStorage.getItem("email");
-        try{
-            const resp = await fetch("http://localhost:8000/buyer/create_job?email="+email,{
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch("http://localhost:8000/buyer/post-job", {
                 method: 'POST',
-                headers: {'Content-Type' : 'application/json'},
-                body:JSON.stringify(formData)
-            }).then(responce=>responce.text()).then(data=>{
-                if(data){
-                    alert("Job successfully created");
-                    navigate("/buyer")
-                }
-                else{
-                    navigate("/login");
-                    alert("Session Expired..Login again");
-                }
-            })
-        }catch(err){
-            console.log("Error : ", err);
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(formData)
+            });
+            const data = await response.text();
+            if (data) {
+                alert("Job successfully created");
+                navigate("/buyer");
+            } else {
+                navigate("/login");
+                alert("Session Expired..Login again");
+            }
+        } catch (err) {
+            console.log("Error: ", err);
         }
-    }
+    };
+    
 
     const handleDoaminChanges = (e)=>{
         setDomain(e.target.value);
@@ -213,15 +217,15 @@ function PostJob(){
                         <label>Service Category</label>
                     </div>
                     <div className="form-inputs">
-                        <input name="pay_per_hr" value={formData.pay_per_hr} onChange={handleChanges} required type = "text"></input>
-                        <label>Pay rate per hour</label>
+                        <input name="budget" value={formData.pay_per_hr} onChange={handleChanges} required type = "text"></input>
+                        <label>Budget</label>
                     </div>
                     <div className="form-inputs">
-                        <input name="expected_duration" value={formData.expected_duration} onChange={handleChanges} required type = "text"></input>
-                        <label>Expected duration in hours</label>
+                        <input name="project_deadline" value={formData.expected_duration} onChange={handleChanges} required type = "date"></input>
+                        <label>Project Deadline</label>
                     </div>
                     <div className="form-inputs">
-                        <input name="deadline" value={formData.deadline} required onChange={handleChanges} type = "date"></input>
+                        <input name="project_deadline" value={formData.deadline} required onChange={handleChanges} type = "date"></input>
                         <label>Job post deadline</label>
                     </div>
                     <div className="form-inputs">

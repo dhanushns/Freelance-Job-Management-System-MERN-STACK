@@ -1122,10 +1122,10 @@
                         height: 2px;
                         border: 1px solid #d3d3d3;
                     }
-                    .active{
-                        background-color: green;
-                        color: #fff;
-                    }
+                }
+                .active{
+                    background-color: green;
+                    color: #fff;
                 }
             }
         }
@@ -1276,13 +1276,10 @@
                         height: 2px;
                         border: 1px solid #d3d3d3;
                     }
-                    .title-active{
-                        background-color: green;
-                        color: #fff;
-                    }
-                    .line-active{
-                        background-color: green;
-                    }
+                }
+                .active{
+                    background-color: green;
+                    color: #fff;
                 }
             }
         }
@@ -1415,6 +1412,11 @@
             box-shadow: 0 0 10px 2px #d3d3d3;
             .post-header{
                 padding: 10px 30px;
+            }
+            .childs{
+                display: flex;
+                flex-wrap: wrap;
+                gap:30px;
             }
             .post-body{
                 display: flex;

@@ -40,7 +40,7 @@ function Buyer(){
             }
             else navigate("/login");
         }).catch(err=> console.log("Error fetching data : ",err));
-    },[data]);
+    },[data,navigate]);
 
     return(
         <>

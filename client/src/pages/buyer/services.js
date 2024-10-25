@@ -27,7 +27,7 @@ function Services(){
                 <h2>Most Popular in Programming & Tech</h2>
             </div>
             <div className='modal-body'>
-                <Link to = "/buyer/services/category?key=python" className='lists l1 servicesCategory'>
+                <Link to = "/buyer/services/category" className='lists l1 servicesCategory'>
                     <div className='domain_img'>
                         <img></img>
                     </div>
@@ -43,7 +43,7 @@ function Services(){
                         <img></img>
                     </div>
                     <div className='domain-title'>
-                        <div className="hide-decorations list-title">HTML && CSS Developers</div>
+                        <div className="hide-decorations list-title">Java Developer</div>
                         <div className='arrow'>
                             <i className='fa fa-arrow-right'></i>
                         </div>

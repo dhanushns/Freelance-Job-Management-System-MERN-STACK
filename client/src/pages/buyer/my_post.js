@@ -7,42 +7,54 @@ import { useEffect } from "react";
 
 function MyPost() {
     const [jobs, loadJobs] = useState([]);
-    const email = sessionStorage.getItem("email");
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
-        fetch('http://localhost:8000/buyer/getJobs?email=' + email)
+        fetch('http://localhost:8000/buyer/get-job-post',{
+            method:"GET",
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        })
             .then(response => response.json())
             .then(data => {
                 loadJobs(data);
-                console.log(data);
             });
-    }, []);
+    }, [jobs]);
 
     const handleHire = (jobId, sellerId) => {
-        fetch(`http://localhost:8000/buyer/hire?job_id=${jobId}&seller_id=${sellerId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ status: 'hired' }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                loadJobs(prevJobs => 
-                    prevJobs.map(job => {
-                        if (job._id === jobId) {
-                            job.proposals.push({ seller_id: sellerId, status: 'hired', submittedAt: new Date() });
-                        }
-                        return job;
-                    })
-                );
-            }
-        })
-        .catch(error => {
-            console.error('Error hiring:', error);
-        });
-    };
+    fetch('http://localhost:8000/buyer/hire?job_id='+jobId+'&seller_id='+sellerId, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: 'hired' }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            loadJobs(prevJobs =>
+                prevJobs.map(job => {
+                    if (job._id === jobId) {
+                        job.proposals = job.proposals.map(proposal => ({
+                            ...proposal,
+                            status: proposal.seller_id === sellerId ? 'hired' : 'disabled',
+                        }));
+                    }
+                    return job;
+                })
+            );
+        }
+    })
+    .catch(error => {
+        console.error('Error hiring:', error);
+    });
+};
+
 
     return (
         <>
@@ -66,23 +78,23 @@ function MyPost() {
                                     <p>{job.description}</p>
                                 </div>
                                 <div className="childs c1">
-                                    <label className="c1-label">Proposal Deadline : {job.deadline}</label>
-                                    <label className="c1-label">Duration : {job.expected_duration}</label>
-                                    <label className="c1-label">Date Posted : {new Date(job.createdAt).toLocaleDateString()}</label>
+                                    <label className="c1-label">Proposal Deadline : {job.post_deadline}</label>
+                                    <label className="c1-label">Duration : {job.project_deadline}</label>
+                                    <label className="c1-label">Date Posted : {new Date(job.created_at).toLocaleDateString()}</label>
                                     <label className="c1-label">Budget : {job.pay_per_hr}</label>
                                     <label className="c1-label">Skills : {job.skills.join(', ')}</label>
                                 </div>
                                 <div className="tracker">
-                                    <label className={`title ${job.proposals.some(prop => prop.status === 'submitted') ? 'active' : ''}`}>Proposal Submitted</label>
-                                    <div className={`line ${job.proposals.some(prop => prop.status === 'submitted') ? 'active' : ''}`}></div>
+                                    <label className={`title ${job.status === 'proposed' ? 'active' : ''}`}>Proposal Submitted</label>
+                                    <div className={`line ${job.status === 'proposed' ? 'active' : ''}`}></div>
 
-                                    <label className={`title ${job.proposals.some(prop => prop.status === 'hired') ? 'active' : ''}`}>Hired</label>
-                                    <div className={`line ${job.proposals.some(prop => prop.status === 'hired') ? 'active' : ''}`}></div>
+                                    <label className={`title ${job.status === 'hired' ? 'active' : ''}`}>Hired</label>
+                                    <div className={`line ${job.status === 'hired' ? 'active' : ''}`}></div>
 
-                                    <label className={`title ${job.proposals.some(prop => prop.status === 'in-progress') ? 'active' : ''}`}>In Progress</label>
-                                    <div className={`line ${job.proposals.some(prop => prop.status === 'in-progress') ? 'active' : ''}`}></div>
+                                    <label className={`title ${job.status === 'in-progress' ? 'active' : ''}`}>In Progress</label>
+                                    <div className={`line ${job.status === 'in-progress' ? 'active' : ''}`}></div>
 
-                                    <label className={`title ${job.proposals.some(prop => prop.status === 'completed') ? 'active' : ''}`}>Completed</label>
+                                    <label className={`title ${job.status === 'completed' ? 'active' : ''}`}>Completed</label>
                                 </div>
                                 <div className="prop-rec">
                                     <div className="title">Proposals Received</div>
@@ -93,10 +105,10 @@ function MyPost() {
                                                     <div className="profile-img"></div>
                                                     <div className="about-div">
                                                         <label>{proposal.seller_id}</label>
-                                                        <button 
+                                                        <button
                                                             className="hireBtn"
                                                             onClick={() => handleHire(job._id, proposal.seller_id)}
-                                                            disabled={proposal.status === 'hired'}
+                                                            disabled={proposal.status === 'hired' || proposal.status === 'disabled'}
                                                         >
                                                             Hire me
                                                         </button>

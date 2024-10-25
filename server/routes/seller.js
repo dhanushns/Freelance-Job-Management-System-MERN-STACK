@@ -1,6 +1,7 @@
 import express from 'express'
 import {db} from '../db.js';
 import { ObjectId } from 'mongodb';
+import authenticateToken from '../authMiddleware.js';
 
 const router = express.Router();
 let id;
@@ -16,36 +17,53 @@ router.get("/seller/profile", async (req,res)=>{
     res.json(dashboardData);
 })
 
-router.get("/seller/getJobs",async (req,res)=>{
+router.get("/seller/get-job-post",authenticateToken, async (req,res)=>{
+    const sellerId = new ObjectId(req.user.userId);
+    if(!sellerId){
+        res.redirect("/login");
+    }
     const jobs = await db.collection("jobs").find({}).toArray();
     res.json(jobs);
 })
 
-router.get("/seller/applyJob", async (req, res) => {
-    const email = req.query.email;
-    const id = req.query.job_id;
+router.post("/seller/apply-job", authenticateToken, async (req, res) => {
+    const jobId = new ObjectId(req.query.job_id);
+    const userId = new ObjectId(req.user.userId);
 
     try {
         const jobsCollection = db.collection("jobs");
         const usersCollection = db.collection("users");
+        const sellersCollection = db.collection("sellers");
 
-        const user = await usersCollection.findOne({ email: email });
+        const user = await usersCollection.findOne({ _id: userId });
         if (!user) {
             return res.status(404).send("User not found");
         }
 
-        const jobId = new ObjectId(id);
-
         const newProposal = {
-            seller_id: email,
-            status:"pending",
+            seller_id: userId,
             submittedAt: new Date()
         };
 
         const result = await jobsCollection.updateOne(
             { _id: jobId },
-            { $push: { proposals: newProposal } }
+            {
+                $push: { proposals: newProposal },
+                $set: { status: "proposed" }
+            }
         );
+
+        const project = {
+            job_id : jobId,
+            status : "pending",
+        }
+
+        await sellersCollection.updateOne(
+            {user_id:userId},
+            {
+                $push : {proposals : project}
+            }
+        )
 
         if (result.matchedCount === 0) {
             return res.status(404).send("Job not found");
@@ -55,6 +73,7 @@ router.get("/seller/applyJob", async (req, res) => {
             console.log("Proposal successfully added.");
             return res.status(200).send(true);
         } else {
+            console.log("Not updated");
             return res.status(304).send(false);
         }
 
@@ -63,5 +82,57 @@ router.get("/seller/applyJob", async (req, res) => {
         return res.status(500).send("Internal server error");
     }
 });
+
+
+router.get("/seller/get-projects", authenticateToken , async (req,res)=>{
+
+    const userId = new ObjectId(req.user.userId);
+    
+    try{
+        const sellersCollection = db.collection("jobs");
+        const projects = await sellersCollection.find({hired_person_id:userId}).toArray();
+        res.json(projects);
+    }catch(err){
+        return res.status(500).send("Internal server error");
+    }
+
+});
+
+router.get("/seller/get-proposals", authenticateToken , async (req,res)=>{
+
+    const userId = new ObjectId(req.user.userId);
+    
+    try{
+        const sellersCollection = db.collection("sellers");
+        const data = await sellersCollection.findOne({user_id:userId},{proposals:1})
+        res.json(data.proposals);
+    }catch(err){
+        return res.status(500).send("Internal server error");
+    }
+
+});
+
+router.get("/seller/job", authenticateToken , async (req,res)=>{
+    const jobId = new ObjectId(req.query.job_id);
+   
+    try{
+        const job = await db.collection("jobs").findOne({_id:jobId});
+        res.json(job);
+    }catch(err){
+        return res.status(500).send("Internal server error");
+    }
+
+});
+
+router.get("/seller/dashboard",authenticateToken, async (req,res)=>{
+    const userId = new ObjectId(req.user.userId);
+   
+    try{
+        const job = await db.collection("sellers").findOne({user_id:userId});
+        res.json(job);
+    }catch(err){
+        return res.status(500).send("Internal server error");
+    }
+})
 
 export default router;
