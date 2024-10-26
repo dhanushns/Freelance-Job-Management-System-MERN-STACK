@@ -14,6 +14,7 @@ router.post("/onboard",async (req,res)=>{
         const user = await db.collection("users").findOne({ email: email });
         console.log(req.session);
         if (!user) {
+            console.log("Error")
             return res.status(404).json({ error: "User not found",user});
         }
         const seller = {
@@ -28,11 +29,13 @@ router.post("/onboard",async (req,res)=>{
             skills,
             personal_website,
             proposals : [],
-            jobs:[]
+            jobs:[],
+            ratings:"0"
         };
 
         await sellers.insertOne(seller);
-        res.redirect("/login");
+        console.log(seller);
+        res.json({success:true,redirect:"/login"});
     }
     catch(err){
         console.log(err);

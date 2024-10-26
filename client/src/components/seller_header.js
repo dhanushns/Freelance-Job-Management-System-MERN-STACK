@@ -1,7 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SellerHeader(){
+
+    const navigate = useNavigate();
+    const logout = async () => {
+        try {
+            localStorage.removeItem("token");
+            navigate("/login");
+        } catch (err) {
+            console.error("Logout error: ", err);
+        }
+    };
+
     return(
         <>
             <div className="header-modal">
@@ -18,6 +30,7 @@ function SellerHeader(){
                     <div className="rc4 icons">
                         <i className="material-icons">person</i>
                     </div>
+                    <button style={{backgroundColor:"transparent",border:"none",fontSize:"20px"}} onClick={logout}>Logout</button>
                 </div>
             </div>
         </>

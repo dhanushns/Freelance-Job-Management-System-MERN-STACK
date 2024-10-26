@@ -49,8 +49,7 @@ function Registration(){
         }
 
         try{
-            let emailId;
-            const resp = await fetch("http://localhost:8000/signup",{
+            await fetch("http://localhost:8000/signup",{
                 method: 'POST',
                 credentials: 'include',
                 headers: {'Content-Type' : 'application/json'},
@@ -58,14 +57,13 @@ function Registration(){
                     ...formData,
                     role:userRole,
                 }),
-            }).then(responce => responce.text()).then(data=>{
-                sessionStorage.setItem("email",data);
-                emailId = data;
-                if(userRole === 'seller'){
-                    navigate('/onboard_seller');
+            }).then(response=>response.json()).then(data=>{
+                if(data.success){
+                    navigate(data.redirect);
                 }
                 else{
-                    navigate("/login");
+                    alert("Error");
+                    navigate("/");
                 }
             });
         }catch(err){

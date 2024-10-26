@@ -52,7 +52,7 @@ function Jobs() {
                 </div>
                 <hr></hr>
                 <div className="modal-body">
-                {jobs.filter(job => job.status === 'pending').map((job, index) => (
+                {jobs.filter(job => job.status === 'pending' || job.status === 'proposed').map((job, index) => (
                     <form key={index} id={job._id} className="posts p1" onSubmit={submitForm}>
                         <div className="post-header">
                             <h2>{job.title}</h2>

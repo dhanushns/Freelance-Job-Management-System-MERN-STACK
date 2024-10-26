@@ -81,7 +81,7 @@ function MyPost() {
                                     <label className="c1-label">Proposal Deadline : {job.post_deadline}</label>
                                     <label className="c1-label">Duration : {job.project_deadline}</label>
                                     <label className="c1-label">Date Posted : {new Date(job.created_at).toLocaleDateString()}</label>
-                                    <label className="c1-label">Budget : {job.pay_per_hr}</label>
+                                    <label className="c1-label">Budget : {job.budget}</label>
                                     <label className="c1-label">Skills : {job.skills.join(', ')}</label>
                                 </div>
                                 <div className="tracker">
@@ -102,9 +102,11 @@ function MyPost() {
                                         {job.proposals.map((proposal, propIndex) => (
                                             <div key={propIndex} className="contact-modal">
                                                 <div className="profile-content">
-                                                    <div className="profile-img"></div>
+                                                    <div className="profile-img">
+                                                        <img src= {proposal.profile_img}></img>
+                                                    </div>
                                                     <div className="about-div">
-                                                        <label>{proposal.seller_id}</label>
+                                                        <label>{proposal.name}</label>
                                                         <button
                                                             className="hireBtn"
                                                             onClick={() => handleHire(job._id, proposal.seller_id)}

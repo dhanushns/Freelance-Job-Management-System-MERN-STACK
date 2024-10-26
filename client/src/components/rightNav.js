@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function RightNav(){
+
+    const navigate = useNavigate();
 
     function toggle_dropBox(){
         var btn = document.getElementById('dropbox_btn');
@@ -18,6 +21,15 @@ function RightNav(){
         }
     }
 
+    const logout = async () => {
+        try {
+            localStorage.removeItem("token");
+            navigate("/login");
+        } catch (err) {
+            console.error("Logout error: ", err);
+        }
+    };
+
     return(
         <>
         <nav>
@@ -33,7 +45,7 @@ function RightNav(){
                     <li><Link to="/Login">Settings</Link></li>
                     <li><Link to="/Login">Billing & Payment</Link></li>
                     <li><hr></hr></li>
-                    <li><Link to="/Login">Logout</Link></li>
+                    <li><button style={{backgroundColor:"transparent",border:"none",fontSize:"20px"}} onClick={logout}>Logout</button></li>
                 </ul>
             </div>
         </nav>

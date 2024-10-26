@@ -21,6 +21,31 @@ function MyProjects() {
             });
     }, [projects]);
 
+    const updateJob = (e)=>{
+        const status = e.target.value;
+        const id = e.target.id;
+        try{
+            const token = localStorage.getItem("token");
+            fetch("http://localhost:8000/seller/update-job",{
+                method:"POST",
+                credentials:'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body:JSON.stringify({id,status})
+            }).then(response=>response.json()).then(data=>{
+                if(!data.succsess){
+                    console.log("Error");
+                }
+                
+            })
+
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     return (
         <>
             <Header />
@@ -53,11 +78,11 @@ function MyProjects() {
                                     <div className={'line ' + (project.status === 'submitted' ? 'line-active' : '')}></div>
                                     <label className={'title ' + (project.status === 'hired' ? 'title-active' : '')}>Hired</label>
                                     <div className={'line ' + (project.status === 'hired' ? 'line-active' : '')}></div>
-                                    <button className={'title mark-btn ' + (project.status === 'in-progress' ? 'title-active' : '')}>Mark In Progress</button>
+                                    <button className={'title mark-btn ' + (project.status === 'in-progress' ? 'title-active' : '') } id = {project._id} value={"in-progress"} onClick={updateJob}>Mark In Progress</button>
                                     <div className={'line ' + (project.status === 'in-progress' ? 'line-active' : '')}></div>
-                                    <button className={'title mark-btn ' + (project.status === 'completed' ? 'title-active' : '')}>Mark Completed</button>
+                                    <button className={'title mark-btn ' + (project.status === 'completed' ? 'title-active' : '') } id = {project._id} value={"completed"} onClick={updateJob}>Mark Completed</button>
                                     <div className='line'></div>
-                                    <label className="title mark-btn">Payment</label>
+                                    <label className="title">Payment</label>
                                 </div>
                             </div>
                         </div>

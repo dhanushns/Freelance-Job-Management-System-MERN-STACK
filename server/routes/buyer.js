@@ -6,12 +6,6 @@ import authenticateToken from '../authMiddleware.js';
 const router = express.Router();
 let id;
 
-router.get("/buyer/profile", async (req,res)=>{
-    id = req.query.email;
-    const user = await db.collection("users").findOne({email : id});
-    res.send(user.firstname);
-})
-
 router.post('/buyer/post-job', authenticateToken, async (req, res) => {
     const { title, description, domain, category, budget, project_deadline, post_deadline, skills } = req.body;
     const buyerId = req.user.userId;
@@ -110,5 +104,15 @@ router.get("/buyer/user-data" , authenticateToken, async (req,res)=>{
     }
 })
 
+router.get("/buyer/get-profiles", authenticateToken , async (req,res)=>{
+    const data = await db.collection("sellers").find({}).toArray();
+    res.json({success : true,data});
+})
+
+router.get("/buyer/profile-data", authenticateToken ,async (req,res)=>{
+    const id = new ObjectId(req.query.id);
+    const user = await db.collection("sellers").findOne({user_id:id});
+    res.json({success : true,user});
+})
 
 export default router;

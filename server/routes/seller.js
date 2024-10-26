@@ -42,6 +42,7 @@ router.post("/seller/apply-job", authenticateToken, async (req, res) => {
 
         const newProposal = {
             seller_id: userId,
+            name : user.firstname,
             submittedAt: new Date()
         };
 
@@ -133,6 +134,51 @@ router.get("/seller/dashboard",authenticateToken, async (req,res)=>{
     }catch(err){
         return res.status(500).send("Internal server error");
     }
+})
+
+router.post("/seller/update-job", authenticateToken , async (req,res)=>{
+    const userId = new ObjectId(req.user.userId);
+    const {id,status} = req.body;
+    try{
+        const jobId = new ObjectId(id);
+        const jobs = await db.collection("jobs");
+        await jobs.updateOne(
+            {_id:jobId},
+            {$set : {status}}
+        );
+
+        const sellers = db.collection('sellers');
+        await sellers.updateOne(
+            {
+                user_id : userId,
+                "jobs.job_id" : jobId
+
+            },
+            {
+                $set : {
+                    "jobs.$.status" : status
+                }
+            }
+        );
+
+        await sellers.updateOne(
+            {
+                user_id : userId,
+                "proposals.job_id" : jobId
+            },
+            {
+                $set : {
+                    "proposals.$.status" : status
+                }
+            }
+        );
+
+        res.json({success : true});
+
+    }catch(err){
+        return res.status(500).send("Internal server error");
+    }
+
 })
 
 export default router;

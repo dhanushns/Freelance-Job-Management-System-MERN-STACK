@@ -165,6 +165,18 @@ function OnboardSeller() {
             <input type="checkbox" id="mobile-app-maintenance" name="category" value="Mobile App Maintenance" onChange={handleFormChange} />
             <label htmlFor="mobile-app-maintenance">Mobile App Maintenance</label>
             </li>
+            <li>
+            <input type="checkbox" id="Python Developers" name="category" value="Pyhton Developers" onChange={handleFormChange} />
+            <label htmlFor="Python Developers">Python Developers</label>
+            </li>
+            <li>
+            <input type="checkbox" id="Java Developers" name="category" value="Java Developers" onChange={handleFormChange} />
+            <label htmlFor="Java Developers">Java Developers</label>
+            </li>
+            <li>
+            <input type="checkbox" id="JavaScript Developers" name="category" value="JavaScript Developers" onChange={handleFormChange} />
+            <label htmlFor="JavaScript Developers">JavaScript Developers</label>
+            </li>
           </ul>
         </>
       );
@@ -249,6 +261,18 @@ function OnboardSeller() {
             <input type="checkbox" id="text-message-marketing" name="category" value="Text Message Marketing" onChange={handleFormChange} />
             <label htmlFor="text-message-marketing">Text Message Marketing</label>
             </li>
+            <li>
+            <input type="checkbox" id="SEO" name="category" value="SEO" onChange={handleFormChange} />
+            <label htmlFor="SEO">SEO</label>
+            </li>
+            <li>
+            <input type="checkbox" id="Social Media Marketing" name="category" value="Social Media Marketing" onChange={handleFormChange} />
+            <label htmlFor="Social Media Marketing">Social Media Marketing</label>
+            </li>
+            <li>
+            <input type="checkbox" id="Video Marketing" name="category" value="Video Marketing" onChange={handleFormChange} />
+            <label htmlFor="Video Marketing">Video Marketing</label>
+            </li>
           </ul>
         </>
       );
@@ -312,6 +336,18 @@ function OnboardSeller() {
             <li>
             <input type="checkbox" id="icon-design" name="category" value="Icon Design" onChange={handleFormChange} />
             <label htmlFor="icon-design">Icon Design</label>
+            </li>
+            <li>
+            <input type="checkbox" id="Minimalist Logo Design" name="category" value="Minimalist Logo Design" onChange={handleFormChange} />
+            <label htmlFor="Minimalist Logo Design">Minimalist Logo Design</label>
+            </li>
+            <li>
+            <input type="checkbox" id="Illustration" name="category" value="Illustration" onChange={handleFormChange} />
+            <label htmlFor="Illustration">Illustration</label>
+            </li>
+            <li>
+            <input type="checkbox" id="Website design" name="category" value="Website design" onChange={handleFormChange} />
+            <label htmlFor="Website design">Website design</label>
             </li>
           </ul>
         </>
@@ -381,6 +417,14 @@ function OnboardSeller() {
             <input type="checkbox" id="text-animation" name="category" value="Text Animation" onChange={handleFormChange} />
             <label htmlFor="text-animation">Text Animation</label>
             </li>
+            <li>
+            <input type="checkbox" id="Social Media Video" name="category" value="Social Media Video" onChange={handleFormChange} />
+            <label htmlFor="Social Media Video">Social Media Video</label>
+            </li>
+            <li>
+            <input type="checkbox" id="UGC Video" name="category" value="UGC Video" onChange={handleFormChange} />
+            <label htmlFor="UGC Video">UGC Video</label>
+            </li>
           </ul>
         </>
       );
@@ -397,13 +441,17 @@ function OnboardSeller() {
 
   const submitForm = async ()=>{
     try{
-      console.log(formData);
-      const email = sessionStorage.getItem("email");
-      const resp = await fetch("http://localhost:8000/onboard",{
-        method: 'post',
+      await fetch("http://localhost:8000/onboard",{
+        method: 'POST',
         credentials: 'include',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+      },
         body: JSON.stringify(formData),
+      }).then(responce=>responce.json()).then(data=>{
+        if(data.success){
+          navigate(data.redirect);
+        }
       });
   }catch(err){
       console.log("Error : ", err);

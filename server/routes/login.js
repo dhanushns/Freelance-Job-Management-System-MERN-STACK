@@ -31,7 +31,7 @@ router.post("/login", async (req, res) => {
                 role: user.role
             },
             'jobsync@9150',
-            { expiresIn: '1h' }
+            { expiresIn: '12h' }
         );
 
         const responseData = {

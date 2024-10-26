@@ -29,7 +29,9 @@ function Login(){
             const resp = await fetch("http://localhost:8000/login",{
                 method: 'POST',
                 credentials: 'include',
-                headers: {'Content-Type' : 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body : JSON.stringify(formData)
             }).then(response=>response.json()).then(data=>{
                 if(data.token){

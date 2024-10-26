@@ -3,7 +3,7 @@ import Header from '../../components/seller_header';
 import Footer from '../../components/footer';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-
+import banner from '../../assets/images/pt_banner.jpg';
 
 function Dashboard() {
     
@@ -32,7 +32,7 @@ function Dashboard() {
                 jobs.forEach(job => {
                     if (job.status === "completed") {
                         completedCount++;
-                    } else if (job.status === "pending") {
+                    } else if (job.status === "in-progress") {
                         pendingCount++;
                     }
                 });
@@ -58,7 +58,7 @@ function Dashboard() {
                     </div>
                     <div className="body-content">
                         <div className="left-childs">
-                            <div className="l1"></div>
+                            {/* <div className="l1"></div> */}
                             <div className="l2">
                                 <span className="l2-title">New Job Posts</span><br />
                                 <span className="sub">Get tailored jobs for your needs.</span>
@@ -69,6 +69,7 @@ function Dashboard() {
                         </div>
                     </div>
                 </div>
+                <img src={banner}></img>
             </div>
             <div className='dashboard-modal modal'>
                 <div className='modal-header'>

@@ -2,8 +2,40 @@ import React from "react";
 import Header from "../../components/buyer_header";
 import Footer from "../../components/footer";
 import RightNav from "../../components/rightNav";
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ProfileView(){
+
+    const location = useLocation();
+    
+    const id = new URLSearchParams(location.search).get('id');
+
+    const [data, setData] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        fetch('http://localhost:8000/buyer/profile-data?id='+id, {
+            method: "GET",
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        })
+            .then(response => response.json())
+            .then(async (res) => {
+                if (res.success) {
+                    setData(res.user);
+                } else {
+                    navigate("/login");
+                }
+            });
+    },);
+
     return(
         <>
         <Header/>
@@ -13,25 +45,25 @@ function ProfileView(){
                 <div className="left-aside">
                     <div className="profile-content">
                         <div className="profile-img">
-
+                            <img src={data.profile_img || "defaultImagePath"}></img>
                         </div>
                         <div className="about-div">
                             <ul>
                                 <li>
-                                    <span>Dhanush</span> | <span>@dhanushns</span>
+                                    <span>{data.display_name}</span>
                                 </li>
                                 <li>
-                                    <span>Rating : 5.4 </span>
+                                    <span>Rating : {data.ratings} </span>
                                 </li>
                                 <li>
-                                    <span>I design from Heart</span>
+                                    <span>{data.bio}</span>
                                 </li>
                                 <li className="location">
                                     <div className="list-div">
                                         <i className="material-icons loc-icon">location_on</i><span>India</span> | 
                                     </div>
                                     <div className="list-div">
-                                        <i className="material-icons loc-icon">chat_bubble</i><span>English, Tamil, Telugu</span>
+                                        <i className="material-icons loc-icon">chat_bubble</i><span>{data.languages}</span>
                                     </div>
                                 </li>
                             </ul>
@@ -42,7 +74,7 @@ function ProfileView(){
                             <h3>About Me</h3>
                         </div>
                         <div className="div-para">
-                            <p>alkfslkfdsdf</p>
+                            <p>{data.description}</p>
                         </div>
                     </div>
                     <div className="skill-div">
@@ -50,18 +82,15 @@ function ProfileView(){
                             <h3>Skills</h3>
                         </div>
                         <div className="div-content">
-                            <div className="skills s1">
-                                Python
-                            </div>
-                            <div className="skills s1">
-                                Python
-                            </div>
-                            <div className="skills s1">
-                                Python
-                            </div>
-                            <div className="skills s1">
-                                Python
-                            </div>
+                        {data.skills && data.skills.length > 0 ? (
+                                    data.skills.map((skill, index) => (
+                                        <div key={index} className="skills s1">
+                                            {skill}
+                                        </div>
+                                    ))
+                                ) : (
+                                <div className="skills s1">No skills available</div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -74,7 +103,7 @@ function ProfileView(){
                             <div className="about-div">
                                 <ul>
                                     <li>
-                                        <span>Dhanush</span> | <span>@dhanushns</span>
+                                        <span>{data.display_name}</span> | <span>@dhanushns</span>
                                     </li>
                                 </ul>
                                 <ul>
@@ -107,7 +136,7 @@ function ProfileView(){
                     <div className="body">
                         <span>Ratings : 5</span>
                         <p>
-                            sakfhaksjdfhaskjdfhaskjfh
+                            Review Description
                         </p>
                     </div>
                 </div>

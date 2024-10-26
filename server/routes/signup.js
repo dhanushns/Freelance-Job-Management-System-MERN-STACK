@@ -29,7 +29,12 @@ router.post("/signup",async (req,res)=>{
         await users.insertOne(newUser);
         req.session.email = email;
         console.log(req.session);
-        if(role === "seller") res.redirect("/onboard_seller");
+        if(role === "seller"){
+            res.json({success : true,redirect:"/onboard_seller"})
+        }
+        else{
+            res.json({success : true,redirect:"/buyer"})
+        }
     }
     catch(err){
         console.log(err);
