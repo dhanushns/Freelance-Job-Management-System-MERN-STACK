@@ -44,9 +44,9 @@ function ProfileView(){
             <div className="modal-body">
                 <div className="left-aside">
                     <div className="profile-content">
-                        <div className="profile-img">
+                        {/* <div className="profile-img">
                             <img src={data.profile_img || "defaultImagePath"}></img>
-                        </div>
+                        </div> */}
                         <div className="about-div">
                             <ul>
                                 <li>
@@ -97,9 +97,9 @@ function ProfileView(){
                 <div className="right-aside">
                     <div className="contact-modal">
                         <div className="profile-content">
-                            <div className="profile-img">
+                            {/* <div className="profile-img">
 
-                            </div>
+                            </div> */}
                             <div className="about-div">
                                 <ul>
                                     <li>
@@ -124,9 +124,9 @@ function ProfileView(){
             <div className="modal-body">
                 <div className="reviews r1">
                     <div className="header">
-                        <div className="img">
+                        {/* <div className="img">
 
-                        </div>
+                        </div> */}
                         <div className="info">
                             <span>Dhanush</span><br></br>
                             <span>India</span>

@@ -51,7 +51,7 @@ function Proposals() {
                     <h2>My Proposals</h2>
                     <hr />
                 </div>
-                <div className="modal-body">
+                <div className="modal-body" style={{flexDirection:"column"}}>
                     {proposals.map((proposal, index) => (
                         <div className="posts p1" key={index}>
                             <div className="post-header">

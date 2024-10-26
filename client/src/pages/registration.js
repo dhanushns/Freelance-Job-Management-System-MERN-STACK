@@ -4,6 +4,9 @@ import Footer from '../components/footer';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import buyer_img from "../assets/images/buyer.png";
+import seller_img from "../assets/images/seller.png";
+
 
 function Registration(){
 
@@ -160,7 +163,7 @@ function Registration(){
                         }}>
                         <div className="section-body">
                             <div className="section-img">
-
+                                    <img src = {buyer_img}></img>
                             </div>
                             <div className="section-footer">
                                 <h5 className="footer-title">Buying freelance services</h5>
@@ -174,7 +177,7 @@ function Registration(){
                     }}>
                         <div className="section-body">
                             <div className="section-img">
-
+                                <img src={seller_img}></img>
                             </div>
                             <div className="section-footer">
                                 <h5 className="footer-title">Selling freelance service</h5>

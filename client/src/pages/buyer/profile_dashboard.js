@@ -61,9 +61,9 @@ function ProfilesDashboard() {
                         .map((profile, index) => (
                             <a href={`/buyer/profile_view?id=${profile.user_id}`} target="_blank" key={index} className="profiles p1" style={{ backgroundColor: "#fff" }}>
                             <i className="fa fa-heart fav"></i>
-                            <div className="img-div">
+                            {/* <div className="img-div">
                                 <img src={profile.profile_img || "defaultImagePath"} alt={`${profile.display_name}'s profile`} />
-                            </div>
+                            </div> */}
                             <div className="about-div">
                                 <div className="ad1 name">
                                 <span>{profile.display_name}</span>
